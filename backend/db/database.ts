@@ -12,4 +12,9 @@ const Drivers = Schema("Drivers", {
     'minimum distance': { type: Number, required: true }
 });
 
-export { Drivers }
+const Rides = Schema("Rides", {
+    "customer_id": { type: String, required: true },
+    "rides": { type: Array, required: true }
+})
+
+export { Drivers, Rides }

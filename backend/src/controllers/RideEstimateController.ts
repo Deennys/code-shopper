@@ -1,7 +1,7 @@
 import axios from "axios";
 import dotenv from 'dotenv';
 import { FastifyRequest, FastifyReply } from "fastify";
-import { getDriversData } from "../services/driverService";
+import { getDriversByDistance } from "../services/driverService";
 
 dotenv.config();
 
@@ -10,7 +10,7 @@ class RideEstimateController {
         const { customer_id: customerId, origin, destination } = request.body as { customer_id: string, origin: string, destination: string }
 
         //Validação de paramentros
-        if (![customerId, origin, destination].every(param => typeof param === 'string' && param.trim())) {
+        if (![customerId, origin, destination].every(param => typeof param === 'string' && param.trim()) || origin.trim() === destination.trim()) {
             reply.status(400).send({
                 "error_code": "INVALID_DATA",
                 "error_description": 'string'
@@ -19,14 +19,18 @@ class RideEstimateController {
         }
 
         try {
-            const [ routes, geocodeOrigin, geocodeDestination ] = await Promise.all([
+            //faz os requests em paralelo
+            const [ dataRoutes, geocodeOrigin, geocodeDestination ] = await Promise.all([
                 this.postRoute(origin, destination),
                 this.getGeocode(origin),
                 this.getGeocode(destination)
             ]) 
+            
+            //converte a distancia para km
+            const distanceKM = Number(dataRoutes?.routes?.[0]?.distanceMeters / 100)
 
-
-            const drivers = getDriversData()
+            //pega os motoristas validos para tal distancia
+            const drivers = getDriversByDistance(distanceKM)
 
             const response = {
                 origin: {
@@ -37,19 +41,28 @@ class RideEstimateController {
                     latitude: geocodeDestination?.lat,
                     longitude: geocodeDestination?.lng
                 },
-                distance: routes?.[0]?.distanceMeters,
-                duration: routes?.[0]?.duration,
-                
+                distance: distanceKM,
+                duration: dataRoutes?.routes?.[0]?.duration,
+                options: drivers.map((driver) => {
+                    return {
+                        id: driver._id,
+                        name: driver.name,
+                        description: driver.description,
+                        vehicle: driver.car,
+                        review: {
+                            rating: driver.stars,
+                            comment: driver.resume
+                        },
+                        value: Number(driver?.rate) * distanceKM
+                    }
+                }),
+                routeResponse: dataRoutes
             }
 
-            reply.status(200).send()
-
+            reply.status(200).send(response)
         } catch (error) {
             throw error
         }
-
-
-
     }
 
     async postRoute(origin: string, destination: string) {
