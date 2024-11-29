@@ -1,6 +1,7 @@
 import { FastifyInstance, FastifyPluginOptions, FastifyRequest, FastifyReply } from "fastify";
 import { RideEstimateController } from "./controllers/RideEstimateController";
 import { RideConfirmController } from "./controllers/RideConfirmController";
+import { RideSearchController } from "./controllers/RideSearchController";
 
 export async function routes(fastify: FastifyInstance, opions: FastifyPluginOptions) {
     fastify.post('/ride/estimate', async(request: FastifyRequest, reply: FastifyReply) => {
@@ -10,6 +11,6 @@ export async function routes(fastify: FastifyInstance, opions: FastifyPluginOpti
         return new RideConfirmController().handle(request, reply)
     })
     fastify.get('/ride/:customer_id', opions, async(request: FastifyRequest, reply: FastifyReply) => {
-        return new RideConfirmController().handle(request, reply)
+        return new RideSearchController().handle(request, reply)
     })
 }   

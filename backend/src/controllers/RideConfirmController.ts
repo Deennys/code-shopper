@@ -45,7 +45,6 @@ class RideConfirmController {
 
         const realValue = distance * Number(driverResponse.rate)
 
-        console.log('chegou aqui');
         if (value === realValue) {
             reply.status(200).send({
                 "success": saveRides(request.body as requestRideConfirm)

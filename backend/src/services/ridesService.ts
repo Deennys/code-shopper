@@ -46,3 +46,11 @@ export function saveRides(requestConfirm: requestRideConfirm) {
     ride.save()
     return true
 }
+
+export function getRides(customerId: string) {
+    const ride = Rides.findOne((ride: ride) => {
+        return ride.customer_id === customerId
+    }) as ride
+
+    return ride
+}
