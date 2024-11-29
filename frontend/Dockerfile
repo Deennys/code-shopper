@@ -15,4 +15,4 @@ COPY . .
 EXPOSE 80
 
 # Start the frontend
-CMD ["npm", "start"]
+CMD ["yarn", "start"]
