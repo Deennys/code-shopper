@@ -4,7 +4,9 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "dev": "tsx watch src/server.ts"
+    "dev": "tsx watch src/server.ts",
+    "build": "tsc",
+    "start": "tsc && node dist/src/server.js"
   },
   "devDependencies": {
     "@types/node": "^22.10.0",

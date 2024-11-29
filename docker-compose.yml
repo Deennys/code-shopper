@@ -15,3 +15,6 @@ services:
       - "80:80"
     depends_on:
       - backend
+    volumes:
+      - ./frontend:/usr/src/app             
+      - ./project.env:/usr/src/app/.env

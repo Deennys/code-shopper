@@ -1,0 +1,36 @@
+.notification {
+    position: fixed;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #ff4d4d;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 4px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    font-size: 16px;
+    font-weight: bold;
+    z-index: 1000;
+    animation: slide-down 0.3s ease-out, fade-out 0.5s ease-in 1.5s forwards;
+  }
+  
+  /* Animação para descer do topo */
+  @keyframes slide-down {
+    from {
+      top: -50px;
+    }
+    to {
+      top: 0;
+    }
+  }
+  
+  /* Animação para desaparecer gradualmente */
+  @keyframes fade-out {
+    from {
+      opacity: 1;
+    }
+    to {
+      opacity: 0;
+    }
+  }
+  
